@@ -3,10 +3,7 @@ package com.example.oenskeseddel.controller;
 import com.example.oenskeseddel.repository.ØnskeRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ØnskeController {
@@ -21,21 +18,39 @@ public class ØnskeController {
     return "forside";
   }
 
-  @PostMapping("/login")
-  public String loginSide(@ModelAttribute String navn, String password, Model model) {
-    int bruger_id = ønskeRepository.loginBruger(navn, password);
-    if (!(bruger_id == -1)) {
-      model.addAttribute("bruger_id",bruger_id);
-      return "redirect:/side";
-    }
+  @GetMapping("loginside")
+  public String showLogin(){
     return "loginside";
   }
 
-  @GetMapping("/side")
-  public String brugerside(@ModelAttribute int bruger_id) {
+  @PostMapping("loginside")
+  public String loginSide(@RequestParam String bruger_navn,@RequestParam String bruger_password, Model model) {
+    int bruger_id = ønskeRepository.loginBruger(bruger_navn, bruger_password);
+    if (!(bruger_id == -1)) {
+      model.addAttribute("bruger_id",bruger_id);
+      return "redirect:/brugerside";
+    }
+    return "redirect:/";
+  }
+
+
+  @GetMapping("/brugerside")
+  public String brugerside(@ModelAttribute int bruger_id, Model model) {
+    model.addAttribute("ønskesedler",ønskeRepository.getØnskesedler(bruger_id));
     return "brugerside";
 
   }
 
+  @GetMapping("/registerside")
+  public String showRegisterSide(){
+    return "registerside";
+  }
 
+  @PostMapping("registerside")
+  public String registerSide(@RequestParam String bruger_navn,@RequestParam String bruger_password, Model model){
+    if(ønskeRepository.isBrugerNavnAvailable(bruger_navn)){
+      ønskeRepository.opretBruger(bruger_navn,bruger_password);
+    }
+    return "redirect:/";
+  }
 }

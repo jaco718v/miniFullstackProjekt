@@ -17,4 +17,12 @@ public class Ønskeseddel {
   public void addØnske(int ønske_id, int seddel_id, String name, double pris){
     ønskeListe.add(new Ønske(ønske_id, seddel_id,name, pris));
   }
+
+  public String getSeddel_navn() {
+    return seddel_navn;
+  }
+
+  public ArrayList<Ønske> getØnskeListe() {
+    return ønskeListe;
+  }
 }

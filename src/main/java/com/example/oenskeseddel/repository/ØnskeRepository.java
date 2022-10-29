@@ -24,7 +24,7 @@ public class ØnskeRepository {
     List<Bruger> brugerList = new LinkedList<>();
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
-      PreparedStatement psts =conn.prepareStatement("SELECT brugere FROM projekt_ønskeseddel");
+      PreparedStatement psts =conn.prepareStatement("SELECT * FROM brugere");
       ResultSet resultSet = psts.executeQuery();
       while(resultSet.next()){
         String bruger_name = resultSet.getString(2);
@@ -47,11 +47,11 @@ public class ØnskeRepository {
     ListIterator<Ønskeseddel> it = seddelList.listIterator();
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
-      String findBruger = "SELECT * FROM ønskesedler where bruger_id=?";
-      PreparedStatement psFindBruger = conn.prepareStatement(findBruger);
-      psFindBruger.setInt(1,bruger_id);
+      String findBrugerSedler = "SELECT * FROM ønskesedler where bruger_id=?";
+      PreparedStatement psFindBrugerSedler = conn.prepareStatement(findBrugerSedler);
+      psFindBrugerSedler.setInt(1,bruger_id);
 
-      ResultSet resultSetBruger = psFindBruger.executeQuery();
+      ResultSet resultSetBruger = psFindBrugerSedler.executeQuery();
       while(resultSetBruger.next()){
         int seddel_id = resultSetBruger.getInt(1);
         String seddel_navn = resultSetBruger.getString(2);
@@ -75,17 +75,73 @@ public class ØnskeRepository {
       e.printStackTrace();}
     return seddelList;
   }
-}
 
+  public boolean isBrugerNavnAvailable(String bruger_navn){
+    try {
+      Connection conn = DriverManager.getConnection(db_url, uid, pwd);
+      String queryCheck = "SELECT brugere WHERE navn=?";
+      PreparedStatement checkNavn = conn.prepareStatement(queryCheck);
+      checkNavn.setString(1, bruger_navn);
+      ResultSet resultSet = checkNavn.executeQuery();
+      if (!resultSet.next()) {
+        return true;
+      }
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();
+    }
+    return false;
+  }
 
-
-  /*  public List<Bruger> getAll(){
-    List<Bruger> brugerList = new LinkedList<>();
+  public void opretBruger(String bruger_navn, String bruger_password){
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      String queryAdd ="INSERT INTO brugere(bruger_navn,bruger_password)" +
+          "VALUES(?,?)";
+      PreparedStatement updatePS = conn.prepareStatement(queryAdd);
+      updatePS.setString(1,bruger_navn);
+      updatePS.setString(2,bruger_password);
+      updatePS.executeQuery();
+      }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();
+    }
+  }
+
+
+  public void addØnskeseddel(int bruger_id, String seddel_navn){
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      String queryAdd ="INSERT INTO ønskesedler(seddel_navn,bruger_id)" +
+          "VALUES(?,?)";
+      PreparedStatement updatePS = conn.prepareStatement(queryAdd);
+      updatePS.setString(1,seddel_navn);
+      updatePS.setInt(2,bruger_id);
+      updatePS.executeUpdate();
     }
     catch (SQLException e){
       System.out.println("Cannot connect to database");
       e.printStackTrace();}
-    return brugerList;
-    }*/
+
+  }
+
+  public void addØnske(int seddel_id, String ønske_navn, double ønske_pris){
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      String queryAdd ="INSERT INTO ønsker(ønske_navn,ønske_pris,seddel_id)" +
+          "VALUES(?,?,?)";
+      PreparedStatement updatePS = conn.prepareStatement(queryAdd);
+      updatePS.setString(1,ønske_navn);
+      updatePS.setDouble(2,ønske_pris);
+      updatePS.setInt(3,seddel_id);
+      updatePS.executeUpdate();
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();}
+
+  }
+
+}

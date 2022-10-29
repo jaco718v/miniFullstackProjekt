@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Din side</title>
 </head>
 <body>
-
+    <h1>Dine ønskesedler</h1>
+        <div th:each="ø : ${ønskesedler}">
+            <span th:text="${ø.seddel_navn}"></span>
+            <span th:text="${ø.ønskeliste.ønske_navn}"></span>
+            <span th:text="${ø.ønskeliste.ønske_navn}"></span>
+        </div>
 </body>
 </html>

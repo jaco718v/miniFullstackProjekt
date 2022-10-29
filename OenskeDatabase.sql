@@ -15,7 +15,7 @@ create table ønskesedler (
                              PRIMARY KEY(seddel_id),
                              FOREIGN KEY (bruger_id) REFERENCES brugere(bruger_id)
 );
-create table ønske (
+create table ønsker (
                        ønske_id int auto_increment NOT NULL,
                        seddel_id int,
                        ønske_navn varchar(255),
