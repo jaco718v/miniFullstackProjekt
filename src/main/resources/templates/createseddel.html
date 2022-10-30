@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create seddel</title>
+</head>
+<body>
+<h1>Lav seddel</h1>
+
+<form action="/createseddel" method="post">
+    <input type="hidden" name="bruger_id" th:value="${bruger_id}">
+
+    <label for="navn-felt">Seddel navn</label>
+    <input id="navn-felt" name="seddel_navn">
+
+    <button type="submit">Create</button>
+
+</form>
+
+</body>
+</html>

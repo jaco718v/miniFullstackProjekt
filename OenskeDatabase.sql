@@ -11,13 +11,13 @@ create table brugere (
 create table ønskesedler (
                              seddel_id int auto_increment NOT NULL,
                              seddel_navn varchar(255),
-                             bruger_id int,
+                             bruger_id int NOT NULL,
                              PRIMARY KEY(seddel_id),
                              FOREIGN KEY (bruger_id) REFERENCES brugere(bruger_id)
 );
 create table ønsker (
                        ønske_id int auto_increment NOT NULL,
-                       seddel_id int,
+                       seddel_id int NOT NULL ,
                        ønske_navn varchar(255),
                        ønske_pris varchar(255),
                        PRIMARY KEY (ønske_id),

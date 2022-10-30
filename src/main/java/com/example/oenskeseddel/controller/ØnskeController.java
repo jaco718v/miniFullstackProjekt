@@ -1,9 +1,11 @@
 package com.example.oenskeseddel.controller;
 
+import com.example.oenskeseddel.model.Bruger;
 import com.example.oenskeseddel.repository.ØnskeRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ØnskeController {
@@ -24,19 +26,20 @@ public class ØnskeController {
   }
 
   @PostMapping("loginside")
-  public String loginSide(@RequestParam String bruger_navn,@RequestParam String bruger_password, Model model) {
+  public String loginSide(@RequestParam String bruger_navn, @RequestParam String bruger_password, RedirectAttributes attributes) {
     int bruger_id = ønskeRepository.loginBruger(bruger_navn, bruger_password);
-    if (!(bruger_id == -1)) {
-      model.addAttribute("bruger_id",bruger_id);
+    if (!(bruger_id==-1)) {
+      attributes.addAttribute("bruger_id",bruger_id);
       return "redirect:/brugerside";
     }
-    return "redirect:/";
+    return "redirect:/fejlside";
   }
 
 
   @GetMapping("/brugerside")
-  public String brugerside(@ModelAttribute int bruger_id, Model model) {
-    model.addAttribute("ønskesedler",ønskeRepository.getØnskesedler(bruger_id));
+  public String brugerside(@RequestParam int bruger_id, Model model) {
+    model.addAttribute("bruger",ønskeRepository.findBrugerViaID(bruger_id));
+    model.addAttribute("oenskesedler",ønskeRepository.getØnskesedler(bruger_id)); //Ø duer ik'
     return "brugerside";
 
   }
@@ -46,11 +49,48 @@ public class ØnskeController {
     return "registerside";
   }
 
-  @PostMapping("registerside")
-  public String registerSide(@RequestParam String bruger_navn,@RequestParam String bruger_password, Model model){
-    if(ønskeRepository.isBrugerNavnAvailable(bruger_navn)){
-      ønskeRepository.opretBruger(bruger_navn,bruger_password);
+  @PostMapping("/registerside")
+  public String registerSide(@RequestParam String register_navn, @RequestParam String register_password){ //r m
+    if(ønskeRepository.isBrugerNavnAvailable(register_navn)){
+      ønskeRepository.opretBruger(register_navn, register_password);
+      return "redirect:/successide";
     }
-    return "redirect:/";
+    return "redirect:/fejlside";
   }
+
+  @GetMapping("/createseddel/{bruger_id}")
+  public String showCreateNewSeddel(@PathVariable("bruger_id") int bruger_id, Model model){
+    model.addAttribute("bruger",ønskeRepository.findBrugerViaID(bruger_id));
+    return "createseddel";
+  }
+
+  @PostMapping("/createseddel")
+  public String createNewSeddel(@ModelAttribute Bruger bruger, @RequestParam String seddel_navn, RedirectAttributes attributes){
+    ønskeRepository.createØnskeseddel(bruger.getBruger_id(), seddel_navn);
+    attributes.addAttribute("bruger_id",bruger.getBruger_id());
+    return "redirect:/brugerside";
+  }
+
+  @GetMapping("/createønske/{seddel_id}")
+  public String showCreateNewØnske(@PathVariable("seddel_id") int seddel_id, Model model){
+    model.addAttribute(seddel_id);
+    return "createønske";
+  }
+
+  @PostMapping("/createønske")
+  public String createNewØnske(@RequestParam String ønske_navn, @RequestParam double ønske_pris, @RequestParam("seddel_id") int seddel_id){
+    ønskeRepository.createØnske(seddel_id, ønske_navn, ønske_pris);
+    return "redirect:/brugerside";
+  }
+
+  @GetMapping("/fejlside")
+  public String fejlSide(){
+    return "fejlside";
+  }
+
+  @GetMapping("/successide")
+  public String succesSide(){
+    return "successide";
+  }
+
 }

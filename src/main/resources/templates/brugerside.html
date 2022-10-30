@@ -6,10 +6,10 @@
 </head>
 <body>
     <h1>Dine ønskesedler</h1>
-        <div th:each="ø : ${ønskesedler}">
-            <span th:text="${ø.seddel_navn}"></span>
-            <span th:text="${ø.ønskeliste.ønske_navn}"></span>
-            <span th:text="${ø.ønskeliste.ønske_navn}"></span>
+    <span> <a th:href="@{'/createseddel/'+ ${bruger.bruger_id}}">Tilføj seddel</a></span>
+    <div th:each="s : ${oenskesedler}">
+        <span th:text="${s.seddel_navn}">Navn</span>
+        <span> <a th:href="@{'/createønske/'+ ${s.seddel_id}}">Tilføj ønske</a></span>
         </div>
 </body>
 </html>

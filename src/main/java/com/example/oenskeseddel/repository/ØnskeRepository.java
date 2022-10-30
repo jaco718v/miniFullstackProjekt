@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 @Repository
 public class ØnskeRepository {
@@ -20,17 +19,40 @@ public class ØnskeRepository {
   @Value("${spring.datasource.password}")
   private String pwd;
 
+
+  public Bruger findBrugerViaID(int bruger_id){
+    Bruger bruger = new Bruger();
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      PreparedStatement psts =conn.prepareStatement("SELECT * FROM brugere WHERE bruger_id=?");
+      psts.setInt(1,bruger_id);
+      ResultSet rs = psts.executeQuery();
+      rs.next();
+      String bruger_navn = rs.getString(2);
+      String bruger_password = rs.getString(3);
+      bruger.setBruger_id(bruger_id);
+      bruger.setBruger_navn(bruger_navn);
+      bruger.setBruger_password(bruger_password);
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();}
+    return bruger;
+  }
+
+
+
   public int loginBruger(String navn, String password){
-    List<Bruger> brugerList = new LinkedList<>();
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
       PreparedStatement psts =conn.prepareStatement("SELECT * FROM brugere");
       ResultSet resultSet = psts.executeQuery();
       while(resultSet.next()){
+        int bruger_id = resultSet.getInt(1);
         String bruger_name = resultSet.getString(2);
         String bruger_password = resultSet.getString(3);
         if(bruger_name.equals(navn) && bruger_password.equals(password)){
-          return resultSet.getInt(1);
+          return bruger_id;
         }
       }
 
@@ -41,10 +63,8 @@ public class ØnskeRepository {
     return -1;
     }
 
-
   public List<Ønskeseddel> getØnskesedler(int bruger_id){
     List<Ønskeseddel> seddelList = new LinkedList<>();
-    ListIterator<Ønskeseddel> it = seddelList.listIterator();
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
       String findBrugerSedler = "SELECT * FROM ønskesedler where bruger_id=?";
@@ -57,17 +77,11 @@ public class ØnskeRepository {
         String seddel_navn = resultSetBruger.getString(2);
         seddelList.add(new Ønskeseddel(seddel_id,seddel_navn,bruger_id));
 
-        String findØnsker = "SELECT * FROM ønske where seddel_id=?";
+        String findØnsker = "SELECT * FROM ønsker where seddel_id=?";
         PreparedStatement psFindØnsker = conn.prepareStatement(findØnsker);
         psFindØnsker.setInt(1,seddel_id);
 
         ResultSet resultSetØnske = psFindØnsker.executeQuery();
-        Ønskeseddel seddel = it.next();
-        while(resultSetØnske.next()){
-          int ønske_id = resultSetØnske.getInt(1);
-          String ønske_navn = resultSetØnske.getString(3);
-          double ønske_pris = resultSetØnske.getDouble(4);
-          seddel.addØnske(ønske_id, seddel_id, ønske_navn, ønske_pris);}
       }
     }
     catch (SQLException e){
@@ -79,7 +93,7 @@ public class ØnskeRepository {
   public boolean isBrugerNavnAvailable(String bruger_navn){
     try {
       Connection conn = DriverManager.getConnection(db_url, uid, pwd);
-      String queryCheck = "SELECT brugere WHERE navn=?";
+      String queryCheck = "SELECT * FROM brugere WHERE bruger_navn=?";
       PreparedStatement checkNavn = conn.prepareStatement(queryCheck);
       checkNavn.setString(1, bruger_navn);
       ResultSet resultSet = checkNavn.executeQuery();
@@ -102,7 +116,7 @@ public class ØnskeRepository {
       PreparedStatement updatePS = conn.prepareStatement(queryAdd);
       updatePS.setString(1,bruger_navn);
       updatePS.setString(2,bruger_password);
-      updatePS.executeQuery();
+      updatePS.executeUpdate();
       }
     catch (SQLException e){
       System.out.println("Cannot connect to database");
@@ -110,12 +124,12 @@ public class ØnskeRepository {
     }
   }
 
-
-  public void addØnskeseddel(int bruger_id, String seddel_navn){
+  public void createØnskeseddel(int bruger_id, String seddel_navn){
     try{
+      System.out.println(bruger_id);
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
       String queryAdd ="INSERT INTO ønskesedler(seddel_navn,bruger_id)" +
-          "VALUES(?,?)";
+          "VALUES(?,?)"; 
       PreparedStatement updatePS = conn.prepareStatement(queryAdd);
       updatePS.setString(1,seddel_navn);
       updatePS.setInt(2,bruger_id);
@@ -127,7 +141,7 @@ public class ØnskeRepository {
 
   }
 
-  public void addØnske(int seddel_id, String ønske_navn, double ønske_pris){
+  public void createØnske(int seddel_id, String ønske_navn, double ønske_pris){
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
       String queryAdd ="INSERT INTO ønsker(ønske_navn,ønske_pris,seddel_id)" +

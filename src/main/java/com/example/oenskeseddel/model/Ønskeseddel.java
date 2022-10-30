@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Ønskeseddel {
   private int seddel_id;
   private String seddel_navn;
-  private ArrayList<Ønske> ønskeListe;
   private int bruger_id;
 
   public Ønskeseddel(int seddel_id, String seddel_navn, int bruger_id) {
@@ -14,15 +13,16 @@ public class Ønskeseddel {
     this.bruger_id = bruger_id;
   }
 
-  public void addØnske(int ønske_id, int seddel_id, String name, double pris){
-    ønskeListe.add(new Ønske(ønske_id, seddel_id,name, pris));
+  public int getSeddel_id() {
+    return seddel_id;
+  }
+
+  public int getBruger_id() {
+    return bruger_id;
   }
 
   public String getSeddel_navn() {
     return seddel_navn;
   }
 
-  public ArrayList<Ønske> getØnskeListe() {
-    return ønskeListe;
-  }
 }
