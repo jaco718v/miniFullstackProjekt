@@ -11,7 +11,12 @@
         <span> <a th:href="@{'/ønskeseddelview/'+ ${s.seddel_id}}">Se seddel</a></span>
         <span th:text="${s.seddel_navn}"></span>
         <span> <a th:href="@{'/createønske/'+ ${s.seddel_id}+'/'+${bruger.bruger_id}}">Tilføj ønske</a></span>
-
-        </div>
+        <span> <a th:href="@{'/delseddel/'+ ${s.seddel_id}+'/'+${bruger.bruger_id}}">Del seddel</a></span>
+    </div>
+    <h1>Ønskesedler delt med dig</h1>
+    <div th:each="d : ${delteoenskesedler}">
+        <span> <a th:href="@{'/ønskeseddelview/'+ ${d.seddel_id}}">Se seddel</a></span>
+        <span th:text="${d.seddel_navn}"></span>
+    </div>
 </body>
 </html>

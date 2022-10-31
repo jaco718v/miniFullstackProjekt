@@ -23,3 +23,9 @@ create table ønsker (
                        PRIMARY KEY (ønske_id),
                        FOREIGN KEY (seddel_id) REFERENCES ønskesedler(seddel_id)
 );
+CREATE TABLE delte_brugere(
+                              seddel_id int NOT NULL,
+                              bruger_id int NOT NULL,
+                              FOREIGN KEY (seddel_id) REFERENCES ønskesedler(seddel_id),
+                              FOREIGN KEY (bruger_id) REFERENCES brugere(bruger_id)
+);

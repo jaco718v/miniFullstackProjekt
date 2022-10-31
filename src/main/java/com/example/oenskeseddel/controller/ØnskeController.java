@@ -40,7 +40,8 @@ public class ØnskeController {
   @GetMapping("/brugerside")
   public String brugerside(@RequestParam int bruger_id, Model model) {
     model.addAttribute("bruger",ønskeRepository.findBrugerViaID(bruger_id));
-    model.addAttribute("oenskesedler",ønskeRepository.getØnskesedler(bruger_id)); //Ø duer ik'
+    model.addAttribute("oenskesedler",ønskeRepository.getEgneØnskesedler(bruger_id)); //Ø duer ik'
+    model.addAttribute("delteoenskesedler",ønskeRepository.getDelteØnskesedler(bruger_id));
     return "brugerside";
 
   }
@@ -94,6 +95,24 @@ public class ØnskeController {
   public String seØnskeseddel(@PathVariable("seddel_id") int seddel_id, Model model){
     model.addAttribute("oenskeliste",ønskeRepository.getØnsker(seddel_id));
     return "ønskeseddelview";
+  }
+
+  @GetMapping("/delseddel/{seddel_id}/{bruger_id}")
+  public String showDelSeddelMedBruger(@PathVariable("seddel_id") int seddel_id, @PathVariable int bruger_id,
+                                    Model model){
+    model.addAttribute("seddel_id",seddel_id);
+    model.addAttribute("bruger_id", bruger_id);
+    return "delseddel";
+  }
+
+  @PostMapping("/delseddel")
+  public String delSeddelMedBruger(@RequestParam int seddel_id, @RequestParam int bruger_id,
+                                   @RequestParam String delbruger_navn, RedirectAttributes attributes){
+  if (ønskeRepository.createDelte_brugere(seddel_id,delbruger_navn)){
+    attributes.addAttribute("bruger_id",bruger_id);
+    return "redirect:/brugerside";
+    }
+    return "redirect:/fejlside";
   }
 
   @GetMapping("/fejlside")

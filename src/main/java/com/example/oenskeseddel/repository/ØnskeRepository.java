@@ -40,6 +40,27 @@ public class ØnskeRepository {
       e.printStackTrace();}
     return bruger;
   }
+  public Bruger findBrugerViaNavn(String bruger_navn){
+    Bruger bruger = new Bruger();
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      PreparedStatement psts =conn.prepareStatement("SELECT * FROM brugere WHERE bruger_navn=?");
+      psts.setString(1,bruger_navn);
+      ResultSet rs = psts.executeQuery();
+      if(rs.next()){
+      int bruger_id = rs.getInt(1);
+      String bruger_password = rs.getString(3);
+      bruger.setBruger_id(bruger_id);
+      bruger.setBruger_navn(bruger_navn);
+      bruger.setBruger_password(bruger_password);
+        return bruger;
+      }
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();}
+    return null;
+  }
 
 
 
@@ -64,7 +85,7 @@ public class ØnskeRepository {
     return -1;
     }
 
-  public List<Ønskeseddel> getØnskesedler(int bruger_id){
+  public List<Ønskeseddel> getEgneØnskesedler(int bruger_id){
     List<Ønskeseddel> seddelList = new LinkedList<>();
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
@@ -82,6 +103,31 @@ public class ØnskeRepository {
     catch (SQLException e){
       System.out.println("Cannot connect to database");
       e.printStackTrace();}
+    return seddelList;
+  }
+
+  public List<Ønskeseddel> getDelteØnskesedler(int bruger_id){
+    List<Ønskeseddel> seddelList = new LinkedList<>();
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      String findDelteSedler = "SELECT ønskesedler.* FROM  delte_brugere " +
+          "INNER JOIN ønskesedler ON delte_brugere.seddel_id = ønskesedler.seddel_id " +
+          "where delte_brugere.bruger_id=?;";
+      PreparedStatement psFindDelteSedler = conn.prepareStatement(findDelteSedler);
+      psFindDelteSedler.setInt(1,bruger_id);
+
+      ResultSet resultSetBruger = psFindDelteSedler.executeQuery();
+      while(resultSetBruger.next()){
+        int seddel_id = resultSetBruger.getInt(1);
+        String seddel_navn = resultSetBruger.getString(2);
+        int brugerID = resultSetBruger.getInt(3);
+        seddelList.add(new Ønskeseddel(seddel_id,seddel_navn,brugerID));
+      }
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();
+    }
     return seddelList;
   }
 
@@ -175,5 +221,27 @@ public class ØnskeRepository {
       e.printStackTrace();}
 
   }
+
+  public boolean createDelte_brugere(int seddel_id, String delbruger){
+    try{
+      Bruger fundetBruger = findBrugerViaNavn(delbruger);
+      if(!(fundetBruger==null)) {
+        Connection conn = DriverManager.getConnection(db_url, uid, pwd);
+        String queryAdd = "INSERT INTO delte_brugere(seddel_id, bruger_id)" +
+            "VALUES(?,?)";
+        PreparedStatement updatePS = conn.prepareStatement(queryAdd);
+        updatePS.setInt(1,seddel_id);
+        updatePS.setInt(2,fundetBruger.getBruger_id());
+        updatePS.executeUpdate();
+        return true;
+      }
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();
+    }
+    return false;
+  }
+
 
 }
