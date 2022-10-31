@@ -1,15 +1,47 @@
 package com.example.oenskeseddel.model;
 
 public class Ønske {
-  private int ønske_id;
+  private int oenske_id;
   private int seddel_id;
-  private String ønske_navn;
-  private double ønske_pris;
+  private String oenske_navn;
+  private double oenske_pris;
 
-  public Ønske(int ønske_id, int seddel_id, String ønske_navn, double ønske_pris) {
-    this.ønske_id = ønske_id;
+  public Ønske(int oenske_id, int seddel_id, String oenske_navn, double oenske_pris) {
+    this.oenske_id = oenske_id;
     this.seddel_id = seddel_id;
-    this.ønske_navn = ønske_navn;
-    this.ønske_pris = ønske_pris;
+    this.oenske_navn = oenske_navn;
+    this.oenske_pris = oenske_pris;
+  }
+
+  public int getOenske_id() {
+    return oenske_id;
+  }
+
+  public int getSeddel_id() {
+    return seddel_id;
+  }
+
+  public String getOenske_navn() {
+    return oenske_navn;
+  }
+
+  public double getOenske_pris() {
+    return oenske_pris;
+  }
+
+  public void setOenske_id(int oenske_id) {
+    this.oenske_id = oenske_id;
+  }
+
+  public void setSeddel_id(int seddel_id) {
+    this.seddel_id = seddel_id;
+  }
+
+  public void setOenske_navn(String oenske_navn) {
+    this.oenske_navn = oenske_navn;
+  }
+
+  public void setOenske_pris(double oenske_pris) {
+    this.oenske_pris = oenske_pris;
   }
 }

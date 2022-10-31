@@ -1,6 +1,7 @@
 package com.example.oenskeseddel.repository;
 
 import com.example.oenskeseddel.model.Bruger;
+import com.example.oenskeseddel.model.Ønske;
 import com.example.oenskeseddel.model.Ønskeseddel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -76,18 +77,35 @@ public class ØnskeRepository {
         int seddel_id = resultSetBruger.getInt(1);
         String seddel_navn = resultSetBruger.getString(2);
         seddelList.add(new Ønskeseddel(seddel_id,seddel_navn,bruger_id));
-
-        String findØnsker = "SELECT * FROM ønsker where seddel_id=?";
-        PreparedStatement psFindØnsker = conn.prepareStatement(findØnsker);
-        psFindØnsker.setInt(1,seddel_id);
-
-        ResultSet resultSetØnske = psFindØnsker.executeQuery();
       }
     }
     catch (SQLException e){
       System.out.println("Cannot connect to database");
       e.printStackTrace();}
     return seddelList;
+  }
+
+  public List<Ønske> getØnsker(int seddel_id){
+    List<Ønske> ønskeListe = new LinkedList<>();
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      String findØnsker = "SELECT * FROM ønsker where seddel_id=?";
+      PreparedStatement psFindØnsker = conn.prepareStatement(findØnsker);
+      psFindØnsker.setInt(1,seddel_id);
+
+      ResultSet resultSetØnske = psFindØnsker.executeQuery();
+      while(resultSetØnske.next()){
+        int ønske_id = resultSetØnske.getInt(1);
+        String ønske_navn = resultSetØnske.getString(3);
+        double ønske_pris = resultSetØnske.getDouble(4);
+        ønskeListe.add(new Ønske(ønske_id, seddel_id, ønske_navn,ønske_pris));
+      }
+    }
+    catch (SQLException e){
+        System.out.println("Cannot connect to database");
+        e.printStackTrace();
+    }
+    return ønskeListe;
   }
 
   public boolean isBrugerNavnAvailable(String bruger_navn){

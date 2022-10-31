@@ -8,7 +8,7 @@
     <h1>Dine ønskesedler</h1>
     <span> <a th:href="@{'/createseddel/'+ ${bruger.bruger_id}}">Tilføj seddel</a></span>
     <div th:each="s : ${oenskesedler}">
-        <span> <a th:href="@{'/createønske/'+ ${s.seddel_id}}">Se seddel</a></span>
+        <span> <a th:href="@{'/ønskeseddelview/'+ ${s.seddel_id}}">Se seddel</a></span>
         <span th:text="${s.seddel_navn}"></span>
         <span> <a th:href="@{'/createønske/'+ ${s.seddel_id}+'/'+${bruger.bruger_id}}">Tilføj ønske</a></span>
 

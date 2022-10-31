@@ -5,6 +5,10 @@
     <title>Ønskeseddel</title>
 </head>
 <body>
-
+    Dine ønsker
+    <div th:each="s : ${oenskeliste}">
+        <span th:text="${s.oenske_navn}"></span>
+        <span th:text="${s.oenske_pris}"></span>
+    </div>
 </body>
 </html>

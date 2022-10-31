@@ -26,7 +26,8 @@ public class ØnskeController {
   }
 
   @PostMapping("loginside")
-  public String loginSide(@RequestParam String bruger_navn, @RequestParam String bruger_password, RedirectAttributes attributes) {
+  public String loginSide(@RequestParam String bruger_navn, @RequestParam String bruger_password,
+                          RedirectAttributes attributes) {
     int bruger_id = ønskeRepository.loginBruger(bruger_navn, bruger_password);
     if (!(bruger_id==-1)) {
       attributes.addAttribute("bruger_id",bruger_id);
@@ -50,7 +51,7 @@ public class ØnskeController {
   }
 
   @PostMapping("/registerside")
-  public String registerSide(@RequestParam String register_navn, @RequestParam String register_password){ //r m
+  public String registerSide(@RequestParam String register_navn, @RequestParam String register_password){
     if(ønskeRepository.isBrugerNavnAvailable(register_navn)){
       ønskeRepository.opretBruger(register_navn, register_password);
       return "redirect:/successide";
@@ -65,7 +66,8 @@ public class ØnskeController {
   }
 
   @PostMapping("/createseddel")
-  public String createNewSeddel(@ModelAttribute Bruger bruger, @RequestParam String seddel_navn, RedirectAttributes attributes){
+  public String createNewSeddel(@ModelAttribute Bruger bruger, @RequestParam String seddel_navn,
+                                RedirectAttributes attributes){
     ønskeRepository.createØnskeseddel(bruger.getBruger_id(), seddel_navn);
     attributes.addAttribute("bruger_id",bruger.getBruger_id());
     return "redirect:/brugerside";
@@ -84,12 +86,13 @@ public class ØnskeController {
                                @RequestParam("seddel_id") int seddel_id, @RequestParam int bruger_id,
                                RedirectAttributes attributes){
     ønskeRepository.createØnske(seddel_id, ønske_navn, ønske_pris);
-    attributes.addAttribute(bruger_id);
+    attributes.addAttribute("bruger_id", bruger_id);
     return "redirect:/brugerside";
   }
 
   @GetMapping("/ønskeseddelview/{seddel_id}")
-  public String seØnskeseddel(@PathVariable("seddel_id") int seddel_id){
+  public String seØnskeseddel(@PathVariable("seddel_id") int seddel_id, Model model){
+    model.addAttribute("oenskeliste",ønskeRepository.getØnsker(seddel_id));
     return "ønskeseddelview";
   }
 
