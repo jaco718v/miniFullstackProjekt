@@ -91,8 +91,9 @@ public class ØnskeController {
     return "redirect:/brugerside";
   }
 
-  @GetMapping("/ønskeseddelview/{seddel_id}")
-  public String seØnskeseddel(@PathVariable("seddel_id") int seddel_id, Model model){
+  @GetMapping("/ønskeseddelview/{seddel_id}/{bruger_id}")
+  public String seØnskeseddel(@PathVariable("seddel_id") int seddel_id, @PathVariable("bruger_id") int bruger_id,
+                              Model model){
     model.addAttribute("oenskeliste",ønskeRepository.getØnsker(seddel_id));
     return "ønskeseddelview";
   }
@@ -124,5 +125,16 @@ public class ØnskeController {
   public String succesSide(){
     return "successide";
   }
+
+  @GetMapping("/reserver/{ønske_id}/{bruger_id}")
+  public String reserverØnske(@PathVariable int ønske_id, @PathVariable int bruger_id,
+                              RedirectAttributes attributes){
+    Bruger fundetBruger = ønskeRepository.findBrugerViaID(bruger_id);
+    ønskeRepository.addReservation(fundetBruger.getBruger_navn(),ønske_id);
+    attributes.addAttribute("bruger_id",bruger_id);
+    return "redirect:/brugerside";
+  }
+
+
 
 }

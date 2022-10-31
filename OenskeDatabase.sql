@@ -20,8 +20,9 @@ create table ønsker (
                        seddel_id int NOT NULL ,
                        ønske_navn varchar(255),
                        ønske_pris varchar(255),
+                       reserveret varchar(255) DEFAULT 'ingen',
                        PRIMARY KEY (ønske_id),
-                       FOREIGN KEY (seddel_id) REFERENCES ønskesedler(seddel_id)
+                       FOREIGN KEY (seddel_id) REFERENCES ønskesedler(seddel_id),
 );
 CREATE TABLE delte_brugere(
                               seddel_id int NOT NULL,

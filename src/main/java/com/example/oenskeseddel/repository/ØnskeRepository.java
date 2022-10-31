@@ -63,7 +63,6 @@ public class ØnskeRepository {
   }
 
 
-
   public int loginBruger(String navn, String password){
     try{
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
@@ -144,7 +143,8 @@ public class ØnskeRepository {
         int ønske_id = resultSetØnske.getInt(1);
         String ønske_navn = resultSetØnske.getString(3);
         double ønske_pris = resultSetØnske.getDouble(4);
-        ønskeListe.add(new Ønske(ønske_id, seddel_id, ønske_navn,ønske_pris));
+        String reserveret = resultSetØnske.getString(5);
+        ønskeListe.add(new Ønske(ønske_id, seddel_id, ønske_navn,ønske_pris,reserveret));
       }
     }
     catch (SQLException e){
@@ -243,5 +243,18 @@ public class ØnskeRepository {
     return false;
   }
 
+  public void addReservation(String bruger_navn,int ønske_id){
+    try{
+      Connection conn = DriverManager.getConnection(db_url,uid,pwd);
+      String queryUpdate ="UPDATE ønsker SET reserveret = ? WHERE ønske_id=?";
+      PreparedStatement updatePS = conn.prepareStatement(queryUpdate);
+      updatePS.setString(1,bruger_navn);
+      updatePS.setInt(2,ønske_id);
+      updatePS.executeUpdate();
 
+    }
+    catch (SQLException e){
+      System.out.println("Cannot connect to database");
+      e.printStackTrace();}
+  }
 }

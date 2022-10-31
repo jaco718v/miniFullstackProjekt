@@ -9,6 +9,9 @@
     <div th:each="s : ${oenskeliste}">
         <span th:text="${s.oenske_navn}"></span>
         <span th:text="${s.oenske_pris}"></span>
+        Reserveret af:
+        <span th:text="${s.reserveret}"></span>
+        <a th:href="@{'/reserver/'+ ${s.oenske_id}+'/'+${bruger_id}}">reserver ønske</a>
     </div>
 </body>
 </html>
