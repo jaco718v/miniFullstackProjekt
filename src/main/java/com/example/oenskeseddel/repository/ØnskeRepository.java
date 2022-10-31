@@ -129,7 +129,7 @@ public class ØnskeRepository {
       System.out.println(bruger_id);
       Connection conn = DriverManager.getConnection(db_url,uid,pwd);
       String queryAdd ="INSERT INTO ønskesedler(seddel_navn,bruger_id)" +
-          "VALUES(?,?)"; 
+          "VALUES(?,?)";
       PreparedStatement updatePS = conn.prepareStatement(queryAdd);
       updatePS.setString(1,seddel_navn);
       updatePS.setInt(2,bruger_id);

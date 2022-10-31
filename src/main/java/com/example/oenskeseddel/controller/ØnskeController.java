@@ -71,16 +71,26 @@ public class ØnskeController {
     return "redirect:/brugerside";
   }
 
-  @GetMapping("/createønske/{seddel_id}")
-  public String showCreateNewØnske(@PathVariable("seddel_id") int seddel_id, Model model){
+  @GetMapping("/createønske/{seddel_id}/{bruger_id}")
+  public String showCreateNewØnske(@PathVariable("seddel_id") int seddel_id, @PathVariable int bruger_id
+                                   ,Model model){
     model.addAttribute(seddel_id);
+    model.addAttribute("bruger_id",bruger_id);
     return "createønske";
   }
 
   @PostMapping("/createønske")
-  public String createNewØnske(@RequestParam String ønske_navn, @RequestParam double ønske_pris, @RequestParam("seddel_id") int seddel_id){
+  public String createNewØnske(@RequestParam String ønske_navn, @RequestParam double ønske_pris,
+                               @RequestParam("seddel_id") int seddel_id, @RequestParam int bruger_id,
+                               RedirectAttributes attributes){
     ønskeRepository.createØnske(seddel_id, ønske_navn, ønske_pris);
+    attributes.addAttribute(bruger_id);
     return "redirect:/brugerside";
+  }
+
+  @GetMapping("/ønskeseddelview/{seddel_id}")
+  public String seØnskeseddel(@PathVariable("seddel_id") int seddel_id){
+    return "ønskeseddelview";
   }
 
   @GetMapping("/fejlside")
