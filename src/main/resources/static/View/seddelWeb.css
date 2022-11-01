@@ -1,0 +1,15 @@
+body{
+    background-image: url("../Images/Ocean1.jpg");
+    background-repeat: no-repeat;
+    background-color: lightblue;
+    background-size: 1300px 595px;
+}
+
+div.main{
+    background-color: lightsteelblue;
+    border-radius: 20px;
+    border-style: solid;
+    width: 720px;
+    height: 570px;
+    margin: auto;
+}

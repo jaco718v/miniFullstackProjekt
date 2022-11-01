@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Din side</title>
+    <link rel="stylesheet" href="/View/seddelWeb.css">
 </head>
 <body>
+<div class="main">
     <h1>Dine ønskesedler</h1>
     <span> <a th:href="@{'/createseddel/'+ ${bruger.bruger_id}}">Tilføj seddel</a></span>
     <div th:each="s : ${oenskesedler}">
@@ -18,5 +20,6 @@
         <span> <a th:href="@{'/ønskeseddelview/'+ ${d.seddel_id}+'/'+${bruger.bruger_id}}">Se seddel</a></span>
         <span th:text="${d.seddel_navn}"></span>
     </div>
+</div>
 </body>
 </html>

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Del seddel</title>
+    <link rel="stylesheet" href="/View/seddelWeb.css">
 </head>
 <body>
+<div class="main">
 Del din seddel
   <form action="/delseddel" method="post">
       <input type="hidden" name="bruger_id" th:value="${bruger_id}">
@@ -15,5 +17,6 @@ Del din seddel
 
       <button type="submit">Submit</button>
   </form>
+</div>
 </body>
 </html>
