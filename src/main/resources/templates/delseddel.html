@@ -7,7 +7,8 @@
 </head>
 <body>
 <div class="main">
-Del din seddel
+    <div class="text">
+<h1> Del din seddel </h1>
   <form action="/delseddel" method="post">
       <input type="hidden" name="bruger_id" th:value="${bruger_id}">
       <input type="hidden" name="seddel_id" th:value="${seddel_id}">
@@ -15,8 +16,9 @@ Del din seddel
       <label for="navn-felt">Del med bruger:</label>
       <input id="navn-felt" name="delbruger_navn">
 
-      <button type="submit">Submit</button>
+      <button type="submit">Del seddel</button>
   </form>
+</div>
 </div>
 </body>
 </html>

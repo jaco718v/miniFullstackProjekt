@@ -2,14 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Forside</title>
+    <title>Tømmerflåden</title>
     <link rel="stylesheet" href="/View/seddelWeb.css">
 </head>
 <body>
 <div class="main">
-    <h1> Tømmerflåden </h1>
-    <a th:href="@{'/loginside'}">Login</a>
-    <a th:href="@{'/registerside'}">Register</a>
+    <h1 class="title"> Velkommen til Tømmerflåden </h1>
+    <div class="text">
+        <br>
+        På denne side kan du oprette og dele ønskesedler med andre brugere
+        <br>
+        <br>
+        <br>
+        Har du allerede en konto?:
+        <a th:href="@{'/loginside'}">Login</a>
+        <br>
+        <br>
+        <br>
+        Har du ikke en konto?:
+        <a th:href="@{'/registerside'}">Opret konto</a>
+    </div>
 </div>
 </body>
 </html>

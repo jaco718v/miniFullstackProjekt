@@ -7,8 +7,12 @@
 </head>
 <body>
 <div class="main">
-<h1>Register your account</h1>
-
+    <div class="text">
+<h1>Opret en ny konto</h1>
+<br>
+    Hvis du bliver sendt til fejlsiden, betyder det at brugernavnet allerede er i brug
+    <br>
+    <br>
 <form action="/registerside" method="post">
     <label for="navn-felt">Navn</label>
     <input id="navn-felt" name="register_navn">
@@ -16,9 +20,10 @@
     <label for="password-felt">Password</label>
     <input id="password-felt" name="register_password">
 
-    <button type="submit">Register</button>
+    <button type="submit">Opret konto</button>
 
 </form>
+</div>
 </div>
 </body>
 </html>

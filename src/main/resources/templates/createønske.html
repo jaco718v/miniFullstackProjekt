@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create ønske</title>
+    <title>Opret</title>
     <link rel="stylesheet" href="/View/seddelWeb.css">
 </head>
 <body>
 <div class="main">
-Create ønske
+    <div class="text">
+    <h1>Create ønske</h1>
+    <br>
+    <br>
 <form action="/createønske" method="post">
 
     <input type="hidden" name="bruger_id" th:value="${bruger_id}">
@@ -23,6 +26,7 @@ Create ønske
 
 </form>
 
+</div>
 </div>
 </body>
 </html>
